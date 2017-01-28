@@ -1,2 +1,2 @@
 # cesium-asteroid-impacts
-Simple data vis. on using Cesium.js
+Simple data visualisation of historical asteroid impacts
