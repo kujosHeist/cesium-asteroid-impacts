@@ -2,15 +2,17 @@
 var viewer = new Cesium.Viewer('cesiumContainer');
 var craters = [];
 
-  
-// these two blocks of code create a function to create an impact crater every 4 seconds
-setTimeout(function(){
+ $(window).on("load", function(){
+
+ 	// loops through each asteroid datapoint and draws an impact 
+ 	// every 4 seconds (impacts defined in data.js)
 	for(var i = 0; i < impacts.length; i++){
 		var delay = i * 4000;
-		var tokens = impacts[i].split(",")
-		call_timeout(tokens, delay)
+		var tokens = impacts[i].split(",");
+		
+		call_timeout(tokens, delay);
 	}
-}, 2000);
+ });
 
 function call_timeout(tokens, delay){
   	setTimeout(function(){
@@ -19,7 +21,6 @@ function call_timeout(tokens, delay){
 }
 
 var point = null;
-
 
 function draw_impact(tokens){
 	
