@@ -1,6 +1,6 @@
 
 var viewer = new Cesium.Viewer('cesiumContainer');
-var craters = [];
+var impact_explosions = [];
 
  $(window).on("load", function(){
 
@@ -8,34 +8,37 @@ var craters = [];
  	// every 4 seconds (impacts defined in data.js)
 	for(var i = 0; i < impacts.length; i++){
 		var delay = i * 4000;
-		var tokens = impacts[i].split(",");
 		
-		call_timeout(tokens, delay);
+		var impact_tokens = impacts[i].split(",");
+		call_timeout_with_delay(impact_tokens, delay);
 	}
  });
 
-function call_timeout(tokens, delay){
+function call_timeout_with_delay(impact_tokens, delay){
   	setTimeout(function(){
-		draw_impact(tokens);
+		draw_impact(impact_tokens);
   	}, delay);  
 }
 
-var point = null;
+var impact_label = null;
 
-function draw_impact(tokens){
-	
-	for(var i = 0; i < craters.length; i++){
-		viewer.entities.remove(craters[i]);
+function draw_impact(impact_tokens){
+
+	// removes explosion from previous impact
+	for(var i = 0; i < impact_explosions.length; i++){
+		viewer.entities.remove(impact_explosions[i]);
 	}
 	
-	if(point != null){
-		viewer.entities.remove(point);
+	if(impact_label != null){
+		viewer.entities.remove(impact_label);
 	}
 
-	date = tokens[0];
-	longitude = parseFloat(tokens[1]);
-	latitude = parseFloat(tokens[2]);
+	date = impact_tokens[0];
+	longitude = parseFloat(impact_tokens[1]);
+	latitude = parseFloat(impact_tokens[2]);
 
+
+	// adds point to base of impact line
 	viewer.entities.add({
 		name: 'impact date: ' + date,
 		position : Cesium.Cartesian3.fromDegrees(longitude, latitude, 1000),
@@ -45,7 +48,8 @@ function draw_impact(tokens){
 		}        
 	}); 
 
-	point = viewer.entities.add({
+	// adds label to impact line
+	impact_label = viewer.entities.add({
 		name: 'Impact Year: ' + date,
 
 		label : {
@@ -61,6 +65,7 @@ function draw_impact(tokens){
 		}        
 	});    
 
+	// adds point to top of impact line
 	viewer.entities.add({
 		name: 'impact date: ' + date,     
 		position : Cesium.Cartesian3.fromDegrees(longitude, latitude, 1000000),
@@ -70,6 +75,7 @@ function draw_impact(tokens){
 		}        
 	});  
 
+	// adds impact line, which is an arrow point to the point of impact 
 	viewer.entities.add({
 		name : 'Impact',
 		polyline : {
@@ -84,21 +90,24 @@ function draw_impact(tokens){
 	var size_array_length = [200000.0, 400000.0, 500000.0]
 	var size_array_bottom = [100000.0, 200000.0, 350000.0]
 
+	// calls function to draw expanding set of red cones around impact point to simulate explosion
 	for(var j = 0; j < size_array_bottom.length; j++){
 		var delay = j * 700;
-		make_crater(longitude, latitude, size_array_length[j], size_array_bottom[j], delay)
+		make_crater_with_delay(longitude, latitude, size_array_length[j], size_array_bottom[j], delay)
 	}
 
-	viewer.flyTo(point, {offset:  new Cesium.HeadingPitchRange(0.0, Cesium.Math.toRadians(-60.0), 10000 * 1000)})
+	// move camera to view impact
+	viewer.flyTo(impact_label, {offset:  new Cesium.HeadingPitchRange(0.0, Cesium.Math.toRadians(-60.0), 10000 * 1000)})
 }   
 
 
-function make_crater(longitude, latitude, length, bottom, delay){
+function make_crater_with_delay(longitude, latitude, length, bottom, delay){
 	setTimeout(function(){
 		draw_crater(longitude, latitude, length, bottom);
 	}, delay);
 }
 
+// draws red cone around impact point
 function draw_crater(longitude, latitude, length, bottom){
 	var redCone = viewer.entities.add({
 		name : 'Red cone',
@@ -111,5 +120,7 @@ function draw_crater(longitude, latitude, length, bottom){
 		material : Cesium.Color.RED.withAlpha(0.5)
 		},
 	});
-	craters.push(redCone)
+
+	// keeps track of red cones to remove when next impact is displayed
+	impact_explosions.push(redCone)
 }
