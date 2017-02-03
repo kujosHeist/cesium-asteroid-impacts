@@ -4,12 +4,14 @@
 
 ## Simple data visualisation of historical asteroid impacts
 
+**Prerequisites**: Recent version of Chrome, Python 3.x or 2.x
+
 To run:
 
-* download zip folder and unpack to folder
-* navigate to folder in terminal/command line
-* run: python -m http.server
-* naviagate localhost:8000/views/ in browser
+* download zip and unpack to folder
+* navigate to root project folder in terminal/command line
+* run: python -m http.server (for python 3.x) or python -m SimpleHTTPServer 8000 (for python 2.x)
+* naviagate to **localhost:8000/views/** in browser
 
 
 
