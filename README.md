@@ -6,7 +6,7 @@
 
 **Prerequisites**: Recent version of Chrome, Python 3.x or 2.x
 
-To run:
+## To run:
 
 * download zip and unpack to folder
 * navigate to root project folder in terminal/command line
